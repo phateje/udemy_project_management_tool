@@ -1,9 +1,6 @@
 package com.ppmtool.ppmtool.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
@@ -81,5 +78,15 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = new Date();
     }
 }
