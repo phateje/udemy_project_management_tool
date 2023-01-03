@@ -1,6 +1,10 @@
 package com.ppmtool.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 
@@ -9,7 +13,11 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "Need to provide a project name")
     private String projectName;
+    @NotBlank(message = "Need to provide a project id")
+    @Size(min=4, max=6, message = "4 to 6 char id allowed")
+    @Column(updatable = false, unique = true)
     private String projectId;
     private String description;
     private Date startDate;
