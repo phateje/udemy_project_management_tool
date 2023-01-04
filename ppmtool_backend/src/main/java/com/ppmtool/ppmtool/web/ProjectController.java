@@ -1,18 +1,22 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.Project;
+import com.ppmtool.ppmtool.services.ControllerUtils;
 import com.ppmtool.ppmtool.services.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 @RestController
@@ -21,16 +25,19 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private ControllerUtils controllerUtils;
+
     @PostMapping("")
     public ResponseEntity<?> upsert(@Valid @RequestBody Project project, BindingResult result) {
         // binding result just gets populated for you... neat
-        if (result.hasErrors()) {
-            StringJoiner stringJoiner = new StringJoiner("\n - ");
-            stringJoiner.add("Found the following issues with the project:");
-            for (ObjectError error : result.getAllErrors()) {
-                stringJoiner.add(error.getDefaultMessage());
-            }
-            return new ResponseEntity<String>(stringJoiner.toString(), HttpStatus.BAD_REQUEST);
+        // so it seems that binding result and the valid annotations just runs through the validation constraints
+        // that don't need a trip to the database to validate. E.g. a string length is validated immediately
+        // and the error object is returned with a good error message. But if you try to insert a new object with a
+        // duplicate value for a unique field, a 500 uncaught error is thrown :boom:
+        var errors = controllerUtils.getInvalidObjectErrors(result);
+        if (errors.isEmpty() == false) {
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Project>(projectService.upsert(project), HttpStatus.CREATED);
     }
