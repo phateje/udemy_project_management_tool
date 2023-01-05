@@ -39,10 +39,4 @@ public class ProjectController {
         return new ResponseEntity<Project>(projectService.upsert(project), HttpStatus.CREATED);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public class ProjectException extends Exception {
-        public ProjectException(String message) {
-            super(message);
-        }
-    }
 }
