@@ -48,7 +48,7 @@ public class ProjectControllerTest {
     }
 
     @Test
-    void shouldRetrieveCorrectProject() {
+    void shouldRetrieveCorrectProjectById() {
         Project project1 = new Project();
         project1.setProjectId("test1");
         project1.setProjectName("name1");
@@ -60,5 +60,23 @@ public class ProjectControllerTest {
 
         assertThat(projectRepository.count() == 2);
         assertThat(projectService.getById("test2").getProjectName() == "test2");
+    }
+
+    @Test
+    void shouldRetrieveCorrectProjectByName() {
+        Project project1 = new Project();
+        project1.setProjectId("test1");
+        project1.setProjectName("name1");
+        Project project2 = new Project();
+        project2.setProjectId("test2");
+        project2.setProjectName("name1");
+        projectRepository.save(project1);
+        projectRepository.save(project2);
+
+        assertThat(projectRepository.count() == 2);
+        assertThat(projectRepository.findByProjectName("name1").size() == 2);
+        for (Project p : projectRepository.findByProjectName("name1")) {
+            assertThat(p.getProjectName() == "name1");
+        }
     }
 }
