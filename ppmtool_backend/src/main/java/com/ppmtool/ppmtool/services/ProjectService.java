@@ -24,6 +24,10 @@ public class ProjectService {
         return projectRepository.findByProjectId(projectId);
     }
 
+    public Iterable<Project> getAll() {
+        return projectRepository.findAll();
+    }
+
     //https://www.baeldung.com/exception-handling-for-rest-with-spring
     public class ProjectException extends RuntimeException {
         public ProjectException(String message) {

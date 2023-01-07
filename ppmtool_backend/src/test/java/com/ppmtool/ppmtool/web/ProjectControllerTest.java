@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 
+import java.util.Iterator;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -93,5 +95,23 @@ public class ProjectControllerTest {
 
         resp = (ResponseEntity<Project>) projectController.getById("test");
         assertThat(resp.getBody().getProjectName() == "name");
+    }
+
+    @Test
+    void getAllProjects() {
+        Project project = new Project();
+        project.setProjectId("test");
+        project.setProjectName("name");
+        projectRepository.save(project);
+        project = new Project();
+        project.setProjectId("test2");
+        project.setProjectName("name2");
+        projectRepository.save(project);
+
+        var resp = (ResponseEntity<Iterable<Project>>) projectController.getAll();
+        Iterator<Project> itor = resp.getBody().iterator();
+        assertThat(itor.next() != null);
+        assertThat(itor.next() != null);
+        assertThat(itor.hasNext() == false);
     }
 }
