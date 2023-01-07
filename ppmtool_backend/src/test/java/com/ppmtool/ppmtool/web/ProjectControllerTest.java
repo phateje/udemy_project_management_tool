@@ -6,6 +6,7 @@ import com.ppmtool.ppmtool.services.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 
@@ -78,5 +79,19 @@ public class ProjectControllerTest {
         for (Project p : projectRepository.findByProjectName("name1")) {
             assertThat(p.getProjectName() == "name1");
         }
+    }
+
+    @Test
+    void controllerGetProjectOrNull() {
+        var resp = (ResponseEntity<Project>) projectController.getById("test");
+        assertThat(resp.getBody() == null);
+
+        Project project = new Project();
+        project.setProjectId("test");
+        project.setProjectName("name");
+        projectRepository.save(project);
+
+        resp = (ResponseEntity<Project>) projectController.getById("test");
+        assertThat(resp.getBody().getProjectName() == "name");
     }
 }
