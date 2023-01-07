@@ -10,6 +10,8 @@ import java.util.Date;
 
 @Entity
 public class Project {
+    // should really find a way to abstract this thing away and hide it from the FE if it ain't needed
+    // https://stackoverflow.com/questions/61008760/spring-boot-how-do-i-hide-or-prevent-from-loading-some-properties-of-an-entity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
