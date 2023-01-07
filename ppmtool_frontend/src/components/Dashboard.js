@@ -1,10 +1,13 @@
 import React, {Component} from 'react'
+import ProjectItem from './Project/ProjectItem'
+
 
 export default class Dashboard extends Component {
     render() {
         return (
             <div>
-                hello fren
+                <h1 className='alert alert-warning'>Dashboard</h1>
+                <ProjectItem />
             </div>
         )
     }
