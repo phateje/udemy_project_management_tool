@@ -1,22 +1,25 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.Project;
+import com.ppmtool.ppmtool.repositories.ProjectRepository;
+import com.ppmtool.ppmtool.services.ProjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.
-
-@SpringBootTest
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
+@SpringBootTest
 public class ProjectControllerTest {
-
     @Autowired
     private ProjectController projectController;
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Test
     void contextLoads() {
@@ -24,7 +27,7 @@ public class ProjectControllerTest {
     }
 
     @Test
-    void shouldInsertProject() {
+    void shouldInsertProjectThenCrapOutForUniqueIdConstraint() {
         Project project = new Project();
         project.setProjectId("test");
         project.setProjectName("name");
@@ -32,7 +35,13 @@ public class ProjectControllerTest {
         BindingResult result = mock(BindingResult.class);
         when(result.hasErrors()).thenReturn(false);
         projectController.upsert(project, result);
+        assertThat(projectRepository.findById(1l).get().getProjectName() == "Name");
 
-        https://1kevinson.com/how-to-write-integration-tests-with-h2-in-memory-database-and-springboot/
+
+        final Project projectEx = new Project();
+        projectEx.setProjectId("test");
+        projectEx.setProjectName("name");
+        assertThatThrownBy(() -> projectController.upsert(projectEx, result))
+                .isInstanceOf(ProjectService.ProjectException.class);
     }
 }
