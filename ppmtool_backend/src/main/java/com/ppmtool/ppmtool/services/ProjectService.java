@@ -20,6 +20,10 @@ public class ProjectService {
         }
     }
 
+    public Project getById(String projectId) {
+        return projectRepository.findByProjectId(projectId);
+    }
+
     //https://www.baeldung.com/exception-handling-for-rest-with-spring
     public class ProjectException extends RuntimeException {
         public ProjectException(String message) {

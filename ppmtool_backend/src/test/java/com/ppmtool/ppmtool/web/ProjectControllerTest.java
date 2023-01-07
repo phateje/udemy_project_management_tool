@@ -20,6 +20,8 @@ public class ProjectControllerTest {
     private ProjectController projectController;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectService projectService;
 
     @Test
     void contextLoads() {
@@ -43,5 +45,20 @@ public class ProjectControllerTest {
         projectEx.setProjectName("name");
         assertThatThrownBy(() -> projectController.upsert(projectEx, result))
                 .isInstanceOf(ProjectService.ProjectException.class);
+    }
+
+    @Test
+    void shouldRetrieveCorrectProject() {
+        Project project1 = new Project();
+        project1.setProjectId("test1");
+        project1.setProjectName("name1");
+        Project project2 = new Project();
+        project2.setProjectId("test2");
+        project2.setProjectName("name2");
+        projectRepository.save(project1);
+        projectRepository.save(project2);
+
+        assertThat(projectRepository.count() == 2);
+        assertThat(projectService.getById("test2").getProjectName() == "test2");
     }
 }
