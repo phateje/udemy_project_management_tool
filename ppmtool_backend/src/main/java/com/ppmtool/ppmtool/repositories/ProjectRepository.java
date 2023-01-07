@@ -17,5 +17,4 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     // so that might cause stuff to break. More reason to have tests I guess :)
     List<Project> findByProjectName(String projectName);
 
-
 }

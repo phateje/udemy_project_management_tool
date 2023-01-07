@@ -28,6 +28,13 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
+    public void delete(String projectId) {
+        Project project = projectRepository.findByProjectId(projectId);
+        if (project != null) {
+            projectRepository.deleteById(project.getId());
+        }
+    }
+
     //https://www.baeldung.com/exception-handling-for-rest-with-spring
     public class ProjectException extends RuntimeException {
         public ProjectException(String message) {

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 @SpringBootTest
 public class ProjectControllerTest {
@@ -40,7 +42,7 @@ public class ProjectControllerTest {
         BindingResult result = mock(BindingResult.class);
         when(result.hasErrors()).thenReturn(false);
         projectController.upsert(project, result);
-        assertThat(projectRepository.findById(1l).get().getProjectName() == "Name");
+        assertThat(projectRepository.findById(1l).get().getProjectName().equals("name")).isTrue();
 
 
         final Project projectEx = new Project();
@@ -61,8 +63,8 @@ public class ProjectControllerTest {
         projectRepository.save(project1);
         projectRepository.save(project2);
 
-        assertThat(projectRepository.count() == 2);
-        assertThat(projectService.getById("test2").getProjectName() == "test2");
+        assertThat(projectRepository.count() == 2).isTrue();
+        assertThat(projectService.getById("test2").getProjectName().equals("name2")).isTrue();
     }
 
     @Test
@@ -76,17 +78,17 @@ public class ProjectControllerTest {
         projectRepository.save(project1);
         projectRepository.save(project2);
 
-        assertThat(projectRepository.count() == 2);
-        assertThat(projectRepository.findByProjectName("name1").size() == 2);
+        assertThat(projectRepository.count() == 2).isTrue();
+        assertThat(projectRepository.findByProjectName("name1").size() == 2).isTrue();
         for (Project p : projectRepository.findByProjectName("name1")) {
-            assertThat(p.getProjectName() == "name1");
+            assertThat(p.getProjectName().equals("name1")).isTrue();
         }
     }
 
     @Test
     void controllerGetProjectOrNull() {
         var resp = (ResponseEntity<Project>) projectController.getById("test");
-        assertThat(resp.getBody() == null);
+        assertThat(resp.getBody() == null).isTrue();
 
         Project project = new Project();
         project.setProjectId("test");
@@ -94,7 +96,7 @@ public class ProjectControllerTest {
         projectRepository.save(project);
 
         resp = (ResponseEntity<Project>) projectController.getById("test");
-        assertThat(resp.getBody().getProjectName() == "name");
+        assertThat(resp.getBody().getProjectName().equals("name")).isTrue();
     }
 
     @Test
@@ -110,8 +112,23 @@ public class ProjectControllerTest {
 
         var resp = (ResponseEntity<Iterable<Project>>) projectController.getAll();
         Iterator<Project> itor = resp.getBody().iterator();
-        assertThat(itor.next() != null);
-        assertThat(itor.next() != null);
-        assertThat(itor.hasNext() == false);
+        assertThat(itor.next() != null).isTrue();
+        assertThat(itor.next() != null).isTrue();
+        assertThat(itor.hasNext() == false).isTrue();
+    }
+
+    @Test
+    void deleteProject() {
+        Project project = new Project();
+        project.setProjectId("test");
+        project.setProjectName("name");
+        projectRepository.save(project);
+        assertThat(projectRepository.count() == 1).isTrue();
+
+        projectController.delete("tests");
+        assertThat(projectRepository.count() == 1).isTrue();
+
+        projectController.delete("test");
+        assertThat(projectRepository.count() == 0).isTrue();
     }
 }
