@@ -10,7 +10,8 @@ let store;
 
 // this if else is only there to setup stuff for the redux chrome extension and kinda ghastly
 // will try to fix it later, unimportant for now
-if (window.navigator.userAgent.includes("Chrome")) {
+if (window.navigator.userAgent.includes("Chrome") && false) {
+  // this causes a funky error in the redux library, likely cause I don't have the redux devtools installed?
   store = createStore(
     rootReducer,
     initState,
