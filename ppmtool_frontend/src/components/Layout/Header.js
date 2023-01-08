@@ -1,14 +1,15 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export default class Header extends Component {
   render() {
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-primary mb-4">
         <div className="container">
-          {/* gotta change these to use the router link component I guess */}
-          <a className="navbar-brand" href="/">
+          <Link to="/" className="navbar-brand">
             Personal Project Management Tool
-          </a>
+          </Link>
+
           <button
             className="navbar-toggler"
             type="button"
@@ -21,9 +22,9 @@ export default class Header extends Component {
           <div className="collapse navbar-collapse" id="mobile-nav">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <a className="nav-link" href="/">
+                <Link to="/" className="nav-link">
                   Dashboard
-                </a>
+                </Link>
               </li>
             </ul>
 
