@@ -35,7 +35,7 @@ class AddProject extends Component {
       endDate: this.state.endDate,
     };
     console.log(project);
-    this.props.createProject(project, this.props.history);
+    this.props.createProject(project);
   }
 
   render() {
