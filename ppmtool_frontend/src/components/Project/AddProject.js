@@ -40,7 +40,7 @@ class AddProject extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log("next props!", nextProps);
+    console.log("next props!", nextProps);
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
@@ -137,7 +137,7 @@ AddProject.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  // console.log("mapping state to props: ", state);
+  console.log("mapping state to props: ", state);
   return {
     errors: state.errors,
   };
