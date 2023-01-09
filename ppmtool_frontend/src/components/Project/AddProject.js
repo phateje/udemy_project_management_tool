@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { PropTypes } from "prop-types";
-import { connect, Connect } from "react-redux";
+import { connect } from "react-redux";
 import { createProject } from "../../actions/projectActions";
 
 class AddProject extends Component {
@@ -13,6 +13,7 @@ class AddProject extends Component {
       description: "",
       startDate: "",
       endDate: "",
+      errors: {},
     };
 
     this.onChange = this.onChange.bind(this);
@@ -36,6 +37,13 @@ class AddProject extends Component {
     };
     console.log(project);
     this.props.createProject(project);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // console.log("next props!", nextProps);
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
   }
 
   render() {
@@ -125,5 +133,17 @@ class AddProject extends Component {
 
 AddProject.propTypes = {
   createProject: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
 };
-export default connect(null, { createProject })(AddProject, window.history);
+
+const mapStateToProps = (state) => {
+  // console.log("mapping state to props: ", state);
+  return {
+    errors: state.errors,
+  };
+};
+
+export default connect(mapStateToProps, { createProject })(
+  AddProject,
+  window.history
+);

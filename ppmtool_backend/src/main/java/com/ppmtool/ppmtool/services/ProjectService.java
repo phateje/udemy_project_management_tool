@@ -16,7 +16,7 @@ public class ProjectService {
         try {
             return projectRepository.save(project);
         } catch (Exception ex) {
-            throw new ProjectException(ex.getMessage());
+            throw new ProjectException("projectId " + project.getProjectId() + " already exists in the database");
         }
     }
 

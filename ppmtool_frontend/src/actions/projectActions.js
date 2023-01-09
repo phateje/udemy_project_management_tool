@@ -10,7 +10,7 @@ export const createProject = (project) => {
         project
       );
       console.log("response: ", res);
-      window.location.replace("/");
+      // window.location.replace("/");
     } catch (err) {
       console.error("whoops!", err);
       dispatch({
