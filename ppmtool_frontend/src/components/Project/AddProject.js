@@ -39,27 +39,15 @@ class AddProject extends Component {
     this.props.createProject(project);
   }
 
+  // this thing is beyond deprecated, look into updating it to something a bit more relevant
   componentWillReceiveProps(nextProps) {
-    console.log("next props!", nextProps);
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
+    // console.log("next props!", nextProps);
+    this.setState({ errors: nextProps.errors });
   }
 
   render() {
     return (
       <div>
-        {
-          //check name attribute input fields
-          //create constructor
-          //set state
-          //set value on input fields
-          //create onChange function
-          //set onChange on each input field
-          //bind on constructor
-          //check state change in the react extension
-        }
-
         <div className="project">
           <div className="container">
             <div className="row">
@@ -137,9 +125,10 @@ AddProject.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  console.log("mapping state to props: ", state);
+  // console.log("mapping state to props: ", state);
   return {
     errors: state.errors,
+    createdProject: { ...state.newProject },
   };
 };
 
