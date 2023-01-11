@@ -46,6 +46,17 @@ class AddProject extends Component {
   }
 
   render() {
+    // if you don't clone it, the error.message will be added up every time the component re-renders, yikes
+    // nasty hack is nasty afterall
+    let errors = { ...this.state.errors };
+    // nasty hack
+    if (errors.message) {
+      if (!errors.projectId) {
+        errors.projectId = [];
+      }
+      errors.projectId.push(errors.message);
+    }
+
     return (
       <div>
         <div className="project">
@@ -58,22 +69,43 @@ class AddProject extends Component {
                   <div className="form-group mb-2">
                     <input
                       type="text"
-                      className="form-control form-control-lg "
+                      className={
+                        "form-control form-control-lg " +
+                        (errors.projectName ? "is-invalid" : "")
+                      }
                       placeholder="Project Name"
                       name="projectName"
                       value={this.state?.projectName}
                       onChange={this.onChange}
                     />
+                    {errors.projectName ? (
+                      <div className="invalid-feedback">
+                        {" "}
+                        {errors.projectName.join(", ")}{" "}
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div className="form-group mb-2">
                     <input
                       type="text"
-                      className="form-control form-control-lg"
+                      className={
+                        "form-control form-control-lg " +
+                        (errors.projectId || errors.message ? "is-invalid" : "")
+                      }
                       placeholder="Unique Project ID"
                       name="projectId"
                       value={this.state?.projectId}
                       onChange={this.onChange}
                     />
+                    {errors.projectId || errors.message ? (
+                      <div className="invalid-feedback">
+                        {errors.projectId?.join(", ")}
+                      </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <div className="form-group mb-2">
                     <textarea
