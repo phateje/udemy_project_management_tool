@@ -1,2 +1,3 @@
 export const GET_ERRORS = "GET_ERRORS";
-export const GET_NEW_PROJECT = "GET_NEW_PROJECT";
+export const CREATE_NEW_PROJECT = "CREATE_NEW_PROJECT";
+export const GET_ALL_PROJECTS = "GET_ALL_PROJECTS";

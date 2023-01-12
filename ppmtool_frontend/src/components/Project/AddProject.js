@@ -164,7 +164,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { createProject })(
-  AddProject,
-  window.history
-);
+export default connect(mapStateToProps, { createProject })(AddProject);

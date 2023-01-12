@@ -1,7 +1,7 @@
 import axios from "axios";
-import { GET_ERRORS, GET_NEW_PROJECT } from "./types";
+import { GET_ERRORS, CREATE_NEW_PROJECT, GET_ALL_PROJECTS } from "./types";
 
-export const createProject = (project) => {
+const createProject = (project) => {
   return async (dispatch) => {
     console.log("request with project", project);
     try {
@@ -11,7 +11,7 @@ export const createProject = (project) => {
       );
       console.log("response: ", res);
       dispatch({
-        type: GET_NEW_PROJECT,
+        type: CREATE_NEW_PROJECT,
         payload: res.data,
       });
       // window.location.replace("/");
@@ -24,3 +24,25 @@ export const createProject = (project) => {
     }
   };
 };
+
+const getAllProjects = () => {
+  return async (dispatch) => {
+    console.log("fetch all projects");
+    try {
+      const res = await axios.get("http://localhost:8080/api/project");
+      console.log("response: ", res);
+      dispatch({
+        type: GET_ALL_PROJECTS,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.error("whoops!", err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    }
+  };
+};
+
+export { createProject, getAllProjects };
