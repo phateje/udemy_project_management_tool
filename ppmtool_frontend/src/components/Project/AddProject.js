@@ -41,7 +41,7 @@ class AddProject extends Component {
 
   // this thing is beyond deprecated, look into updating it to something a bit more relevant
   componentWillReceiveProps(nextProps) {
-    // console.log("next props!", nextProps);
+    console.log("next props!", nextProps);
     this.setState({ errors: nextProps.errors });
   }
 
@@ -160,7 +160,7 @@ const mapStateToProps = (state) => {
   // console.log("mapping state to props: ", state);
   return {
     errors: state.errors,
-    createdProject: { ...state.newProject },
+    createdProject: { ...state.newProject.project },
   };
 };
 

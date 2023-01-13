@@ -6,14 +6,13 @@ import { getAllProjects } from "../actions/projectActions";
 import { connect } from "react-redux";
 
 class Dashboard extends Component {
-  constructor() {
-    super();
-    this.state = {
-      projects: [],
-    };
+  async componentDidMount() {
+    let lmao = await this.props.getAllProjects();
+    console.log("lmao", lmao);
+  }
 
-    // huehuehue, props not available in this context, so leverage js event order
-    setTimeout(() => console.log(this.props.getAllProjects()), 0);
+  componentWillReceiveProps(nextProps) {
+    console.log("next props!", nextProps);
   }
 
   render() {
@@ -39,13 +38,15 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   getAllProjects: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
+  projects: PropTypes.array.isRequired,
 };
 
 export default connect(
   (state) => {
+    console.log("connect with state: ", state);
     return {
       errors: state.errors,
-      projects: state.projects,
+      projects: state.getAllProjects.projects,
     };
   },
   { getAllProjects }
