@@ -24,6 +24,7 @@ public class ProjectService {
         return projectRepository.findByProjectId(projectId);
     }
 
+    // should order by last modified date desc for convenience
     public Iterable<Project> getAll() {
         return projectRepository.findAll();
     }

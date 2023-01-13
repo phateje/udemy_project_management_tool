@@ -6,16 +6,16 @@ import { getAllProjects } from "../actions/projectActions";
 import { connect } from "react-redux";
 
 class Dashboard extends Component {
-  async componentDidMount() {
-    let lmao = await this.props.getAllProjects();
-    console.log("lmao", lmao);
+  componentDidMount() {
+    this.props.getAllProjects();
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log("next props!", nextProps);
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   console.log("next props!", nextProps, this.props);
+  // }
 
   render() {
+    const { projects } = this.props;
     return (
       <div className="projects">
         <div className="container">
@@ -26,7 +26,9 @@ class Dashboard extends Component {
               <CreateProjectButton />
               <br />
               <hr />
-              <ProjectItem />
+              {projects.map((project) => (
+                <ProjectItem key={project.projectId} project={project} />
+              ))}
             </div>
           </div>
         </div>
