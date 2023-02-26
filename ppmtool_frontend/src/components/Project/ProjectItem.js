@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export default class ProjectItem extends Component {
   render() {
@@ -28,7 +29,9 @@ export default class ProjectItem extends Component {
                   type="button"
                   className="list-group-item-warning list-group-item "
                 >
-                  Update Project Info
+                  <Link to={`/updateProject/${project.projectId}`}>
+                    Update Project Info
+                  </Link>
                 </button>
 
                 <button
