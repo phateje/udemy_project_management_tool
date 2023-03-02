@@ -1,85 +1,70 @@
-import React, { Component } from "react";
 import { getProject } from "../../actions/projectActions";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useLoaderData } from "react-router";
 
-class UpdateProject extends Component {
-  componentDidMount() {
-    console.log("component mounted with props: ", this.props);
-    const id = this.props?.match?.params?.id;
-    this.props.getProject(id);
-  }
+export async function loader({ params }) {
+  let res = await getProject(params.projectId)();
+  return res;
+}
 
-  render() {
-    return (
-      <div className="project">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8 m-auto">
-              <h5 className="display-4 text-center">Update Project form</h5>
-              <hr />
-              <form>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control form-control-lg "
-                    placeholder="Project Name"
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control form-control-lg"
-                    placeholder="Unique Project ID"
-                    disabled
-                  />
-                </div>
-                <div className="form-group">
-                  <textarea
-                    className="form-control form-control-lg"
-                    placeholder="Project Description"
-                  />
-                </div>
-                <h6>Start Date</h6>
-                <div className="form-group">
-                  <input
-                    type="date"
-                    className="form-control form-control-lg"
-                    name="start_date"
-                  />
-                </div>
-                <h6>Estimated End Date</h6>
-                <div className="form-group">
-                  <input
-                    type="date"
-                    className="form-control form-control-lg"
-                    name="end_date"
-                  />
-                </div>
+export default function UpdateProject() {
+  const proj = useLoaderData();
 
+  return (
+    <div className="project">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-8 m-auto">
+            <h5 className="display-4 text-center">Update Project form</h5>
+            <hr />
+            <form>
+              <div className="form-group">
                 <input
-                  type="submit"
-                  className="btn btn-primary btn-block mt-4"
+                  type="text"
+                  className="form-control form-control-lg "
+                  placeholder="Project Name"
+                  value={proj.projectName}
                 />
-              </form>
-            </div>
+              </div>
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control form-control-lg"
+                  placeholder="Unique Project ID"
+                  disabled
+                  value={proj.projectId}
+                />
+              </div>
+              <div className="form-group">
+                <textarea
+                  className="form-control form-control-lg"
+                  placeholder="Project Description"
+                  value={proj.description}
+                />
+              </div>
+              <h6>Start Date</h6>
+              <div className="form-group">
+                <input
+                  type="date"
+                  className="form-control form-control-lg"
+                  name="start_date"
+                  value={proj.startDate.slice(0, 10)}
+                />
+              </div>
+              <h6>Estimated End Date</h6>
+              <div className="form-group">
+                <input
+                  type="date"
+                  className="form-control form-control-lg"
+                  name="end_date"
+                  value={proj.endDate.slice(0, 10)}
+                />
+              </div>
+
+              <input type="submit" className="btn btn-primary btn-block mt-4" />
+            </form>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-UpdateProject.propTypes = {
-  getProject: PropTypes.func.isRequired,
-  project: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => {
-  console.log("map state to props with", state);
-  return {
-    project: state.getProject.project,
-  };
-};
-
-export default connect(mapStateToProps, { getProject })(UpdateProject);

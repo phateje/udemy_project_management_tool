@@ -7,7 +7,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import AddProject from "./components/Project/AddProject";
 import Dashboard from "./components/Dashboard";
-import UpdateProject from "./components/Project/UpdateProject";
+import UpdateProject, {
+  loader as projectLoader,
+} from "./components/Project/UpdateProject";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,7 @@ const router = createBrowserRouter([
       {
         path: "/updateProject/:projectId",
         element: <UpdateProject />,
+        loader: projectLoader,
       },
     ],
   },
