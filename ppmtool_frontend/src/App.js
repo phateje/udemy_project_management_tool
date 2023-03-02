@@ -6,25 +6,16 @@ import AddProject from "./components/Project/AddProject";
 import UpdateProject from "./components/Project/UpdateProject";
 import { Provider } from "react-redux";
 import store from "./store";
+import React from "react";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <Provider store={store}>
-      <Router>
-        <div className="App">
-          <Header />
-
-          <Routes>
-            <Route exact path="/" element={<Dashboard />}></Route>
-            <Route exact path="/addProject" element={<AddProject />}></Route>
-            <Route
-              exact
-              path="/updateProject/:projectId"
-              element={<UpdateProject />}
-            ></Route>
-          </Routes>
-        </div>
-      </Router>
+      <Header />
+      <div className="App" id="body">
+        <Outlet />
+      </div>
     </Provider>
   );
 }

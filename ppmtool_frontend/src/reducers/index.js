@@ -7,4 +7,5 @@ export default combineReducers({
   errors: errorReducer,
   newProject: newProjectReducer,
   getAllProjects: getProjectsReducer,
+  getProject: getProjectsReducer,
 });

@@ -1,5 +1,8 @@
-import reducers from ".";
-import { CREATE_NEW_PROJECT, GET_ALL_PROJECTS } from "../actions/types";
+import {
+  CREATE_NEW_PROJECT,
+  GET_ALL_PROJECTS,
+  GET_PROJECT,
+} from "../actions/types";
 
 const initialState = {
   projects: [],
@@ -20,11 +23,17 @@ function newProjectReducer(state = initialState, action) {
 }
 
 function getProjectsReducer(state = initialState, action) {
+  console.log("getProjectsReducer", state, action);
   switch (action.type) {
     case GET_ALL_PROJECTS:
       return {
         ...state,
         projects: action.payload,
+      };
+    case GET_PROJECT:
+      return {
+        ...state,
+        project: action.payload,
       };
     default:
       return state;

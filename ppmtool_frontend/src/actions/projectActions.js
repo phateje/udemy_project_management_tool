@@ -1,5 +1,10 @@
 import axios from "axios";
-import { GET_ERRORS, CREATE_NEW_PROJECT, GET_ALL_PROJECTS } from "./types";
+import {
+  GET_ERRORS,
+  CREATE_NEW_PROJECT,
+  GET_ALL_PROJECTS,
+  GET_PROJECT,
+} from "./types";
 
 const createProject = (project) => {
   return async (dispatch) => {
@@ -45,4 +50,24 @@ const getAllProjects = () => {
   };
 };
 
-export { createProject, getAllProjects };
+const getProject = (id) => {
+  return async (dispatch) => {
+    console.log("fetch project", id);
+    try {
+      const res = await axios.get(`http://localhost:8080/api/project/${id}`);
+      console.log("response: ", res);
+      dispatch({
+        type: GET_PROJECT,
+        payload: res.data,
+      });
+    } catch (err) {
+      console.error("whoops!", err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    }
+  };
+};
+
+export { createProject, getAllProjects, getProject };
