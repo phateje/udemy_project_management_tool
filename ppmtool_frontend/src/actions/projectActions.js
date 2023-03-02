@@ -6,7 +6,7 @@ import {
   GET_PROJECT,
 } from "./types";
 
-const createProject = (project) => {
+const createProject = (project, useDispatch = true) => {
   return async (dispatch) => {
     console.log("request with project", project);
     try {
@@ -15,17 +15,21 @@ const createProject = (project) => {
         project
       );
       console.log("response: ", res);
-      dispatch({
-        type: CREATE_NEW_PROJECT,
-        payload: res.data,
-      });
+      if (useDispatch) {
+        dispatch({
+          type: CREATE_NEW_PROJECT,
+          payload: res.data,
+        });
+      }
       // window.location.replace("/");
     } catch (err) {
       console.error("whoops!", err);
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
+      if (useDispatch) {
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data,
+        });
+      }
     }
   };
 };
@@ -51,19 +55,11 @@ const getAllProjects = () => {
 };
 
 const getProject = (id) => {
-  return async (dispatch) => {
+  return async () => {
     console.log("fetch project", id);
-    // try {
     const res = await axios.get(`http://localhost:8080/api/project/${id}`);
     console.log("response: ", res);
-    // todo clean this up,
-    // gotta figure out how to pass what happens in the route loader into the props
-    // of the component.. sigh
     return res.data;
-    // } catch (err) {
-    //   console.error("whoops!", err);
-    //   return err;
-    // }
   };
 };
 

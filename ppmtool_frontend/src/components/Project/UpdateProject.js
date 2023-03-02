@@ -1,5 +1,6 @@
 import { getProject } from "../../actions/projectActions";
 import { useLoaderData } from "react-router";
+import { createProject } from "../../actions/projectActions";
 
 export async function loader({ params }) {
   let res = await getProject(params.projectId)();
@@ -16,6 +17,12 @@ export default function UpdateProject() {
     newProj[event.target.getAttribute("data-field")] = event.target.value;
   }
 
+  async function onSubmit(evt) {
+    evt.preventDefault();
+    console.log("submitted!", newProj);
+    await createProject(newProj, false)();
+  }
+
   return (
     <div className="project">
       <div className="container">
@@ -23,7 +30,7 @@ export default function UpdateProject() {
           <div className="col-md-8 m-auto">
             <h5 className="display-4 text-center">Update Project form</h5>
             <hr />
-            <form>
+            <form onSubmit={onSubmit}>
               <div className="form-group">
                 <input
                   type="text"
