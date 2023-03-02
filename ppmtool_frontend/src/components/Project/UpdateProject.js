@@ -8,6 +8,13 @@ export async function loader({ params }) {
 
 export default function UpdateProject() {
   const proj = useLoaderData();
+  let newProj = { ...proj };
+
+  function handleChange(event) {
+    // gotta use defaultValue or the fields won't be editable
+    // newProj is the thing we can commit now :)
+    newProj[event.target.getAttribute("data-field")] = event.target.value;
+  }
 
   return (
     <div className="project">
@@ -22,7 +29,9 @@ export default function UpdateProject() {
                   type="text"
                   className="form-control form-control-lg "
                   placeholder="Project Name"
-                  value={proj.projectName}
+                  defaultValue={proj.projectName}
+                  onChange={handleChange}
+                  data-field="projectName"
                 />
               </div>
               <div className="form-group">
@@ -31,14 +40,16 @@ export default function UpdateProject() {
                   className="form-control form-control-lg"
                   placeholder="Unique Project ID"
                   disabled
-                  value={proj.projectId}
+                  defaultValue={proj.projectId}
                 />
               </div>
               <div className="form-group">
                 <textarea
                   className="form-control form-control-lg"
                   placeholder="Project Description"
-                  value={proj.description}
+                  defaultValue={proj.description}
+                  onChange={handleChange}
+                  data-field="description"
                 />
               </div>
               <h6>Start Date</h6>
@@ -47,7 +58,9 @@ export default function UpdateProject() {
                   type="date"
                   className="form-control form-control-lg"
                   name="start_date"
-                  value={proj.startDate.slice(0, 10)}
+                  defaultValue={proj.startDate.slice(0, 10)}
+                  onChange={handleChange}
+                  data-field="startDate"
                 />
               </div>
               <h6>Estimated End Date</h6>
@@ -56,7 +69,9 @@ export default function UpdateProject() {
                   type="date"
                   className="form-control form-control-lg"
                   name="end_date"
-                  value={proj.endDate.slice(0, 10)}
+                  defaultValue={proj.endDate.slice(0, 10)}
+                  onChange={handleChange}
+                  data-field="endDate"
                 />
               </div>
 
