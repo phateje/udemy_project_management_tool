@@ -58,7 +58,7 @@ export default function UpdateProject() {
                   type="date"
                   className="form-control form-control-lg"
                   name="start_date"
-                  defaultValue={proj.startDate.slice(0, 10)}
+                  defaultValue={proj.startDate?.slice(0, 10)}
                   onChange={handleChange}
                   data-field="startDate"
                 />
@@ -69,7 +69,7 @@ export default function UpdateProject() {
                   type="date"
                   className="form-control form-control-lg"
                   name="end_date"
-                  defaultValue={proj.endDate.slice(0, 10)}
+                  defaultValue={proj.endDate?.slice(0, 10)}
                   onChange={handleChange}
                   data-field="endDate"
                 />
