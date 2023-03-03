@@ -24,6 +24,7 @@ public class Project {
     private String description;
     private Date startDate;
     private Date endDate;
+    @Column(updatable = false)
     private Date createdAt;
     private Date updatedAt;
     public Date getStartDate() {

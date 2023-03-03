@@ -1,15 +1,20 @@
 import { getProject } from "../../actions/projectActions";
 import { useLoaderData } from "react-router";
 import { createProject } from "../../actions/projectActions";
+import { useState } from "react";
 
 export async function loader({ params }) {
   let res = await getProject(params.projectId)();
+  if (!res) {
+    throw new Error(`No project found with id: ${params.projectId}`);
+  }
   return res;
 }
 
 export default function UpdateProject() {
   const proj = useLoaderData();
   let newProj = { ...proj };
+  const [errors, setErrors] = useState({});
 
   function handleChange(event) {
     // gotta use defaultValue or the fields won't be editable
@@ -20,7 +25,12 @@ export default function UpdateProject() {
   async function onSubmit(evt) {
     evt.preventDefault();
     console.log("submitted!", newProj);
-    await createProject(newProj, false)();
+    try {
+      await createProject(newProj, false)();
+      setErrors({});
+    } catch (err) {
+      setErrors({ ...err.data });
+    }
   }
 
   return (
@@ -34,12 +44,23 @@ export default function UpdateProject() {
               <div className="form-group">
                 <input
                   type="text"
-                  className="form-control form-control-lg "
+                  className={
+                    "form-control form-control-lg " +
+                    (errors.projectName ? "is-invalid" : "")
+                  }
                   placeholder="Project Name"
                   defaultValue={proj.projectName}
                   onChange={handleChange}
                   data-field="projectName"
                 />
+                {errors.projectName ? (
+                  <div className="invalid-feedback">
+                    {" "}
+                    {errors.projectName.join(", ")}{" "}
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="form-group">
                 <input

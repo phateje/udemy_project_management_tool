@@ -29,6 +29,8 @@ const createProject = (project, useDispatch = true) => {
           type: GET_ERRORS,
           payload: err.response.data,
         });
+      } else {
+        throw err.response;
       }
     }
   };
