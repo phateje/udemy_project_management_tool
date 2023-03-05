@@ -47,6 +47,7 @@ const mapStateToProps = (state) => {
 
   return {
     projectReducer: state.projectReducer,
+    errors: {},
   };
 };
 

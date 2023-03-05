@@ -157,10 +157,10 @@ AddProject.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  // console.log("mapping state to props: ", state);
+  console.log("mapping state to props: ", state);
   return {
     errors: state.errors,
-    createdProject: { ...state.newProject.project },
+    createdProject: { ...state.projectReducer.project },
   };
 };
 
