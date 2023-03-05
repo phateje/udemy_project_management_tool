@@ -1,7 +1,7 @@
 import {
   CREATE_NEW_PROJECT,
+  DELETE_PROJECT,
   GET_ALL_PROJECTS,
-  GET_PROJECT,
 } from "../actions/types";
 
 const initialState = {
@@ -10,7 +10,6 @@ const initialState = {
 };
 
 function newProjectReducer(state = initialState, action) {
-  // console.log("data reducer: ", state, action);
   switch (action.type) {
     case CREATE_NEW_PROJECT:
       return {
@@ -30,14 +29,20 @@ function getProjectsReducer(state = initialState, action) {
         ...state,
         projects: action.payload,
       };
-    case GET_PROJECT:
+    default:
+      return state;
+  }
+}
+
+function deleteProjectReducer(state = initialState, action) {
+  switch (action.type) {
+    case DELETE_PROJECT:
       return {
         ...state,
-        project: action.payload,
       };
     default:
       return state;
   }
 }
 
-export { newProjectReducer, getProjectsReducer };
+export { newProjectReducer, getProjectsReducer, deleteProjectReducer };

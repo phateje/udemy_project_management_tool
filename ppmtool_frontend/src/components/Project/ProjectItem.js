@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { deleteProject } from "../../actions/projectActions";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-export default class ProjectItem extends Component {
+class ProjectItem extends Component {
+  handleDelete(projectId) {
+    console.log("delete!", projectId);
+    this.props.deleteProject(projectId);
+  }
+
   render() {
     const { project } = this.props;
 
@@ -37,6 +45,7 @@ export default class ProjectItem extends Component {
                 <button
                   type="button"
                   className="list-group-item-danger list-group-item "
+                  onClick={this.handleDelete.bind(this, project.projectId)}
                 >
                   Delete Project
                 </button>
@@ -48,3 +57,9 @@ export default class ProjectItem extends Component {
     );
   }
 }
+
+ProjectItem.propTypes = {
+  deleteProject: PropTypes.func.isRequired,
+};
+
+export default connect(null, { deleteProject })(ProjectItem);

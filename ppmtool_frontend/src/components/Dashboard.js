@@ -46,6 +46,11 @@ Dashboard.propTypes = {
 export default connect(
   (state) => {
     console.log("connect with state: ", state);
+
+    if (Object.keys(state.errors).length) {
+      alert(state.errors.error[0]);
+    }
+
     return {
       errors: state.errors,
       projects: state.getAllProjects.projects,
