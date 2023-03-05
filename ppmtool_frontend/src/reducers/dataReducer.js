@@ -9,40 +9,29 @@ const initialState = {
   project: {},
 };
 
-function newProjectReducer(state = initialState, action) {
+export default function dataReducer(state = initialState, action) {
+  console.log("data reducer with action: ", action, "and state: ", state);
   switch (action.type) {
     case CREATE_NEW_PROJECT:
       return {
         ...state,
         project: action.payload,
       };
-    default:
-      return initialState.project;
-  }
-}
 
-function getProjectsReducer(state = initialState, action) {
-  console.log("getProjectsReducer", state, action);
-  switch (action.type) {
     case GET_ALL_PROJECTS:
       return {
         ...state,
         projects: action.payload,
       };
-    default:
-      return state;
-  }
-}
 
-function deleteProjectReducer(state = initialState, action) {
-  switch (action.type) {
     case DELETE_PROJECT:
       return {
         ...state,
+        projects: state.projects.filter(
+          (p) => p.projectId !== action.projectId
+        ),
       };
     default:
       return state;
   }
 }
-
-export { newProjectReducer, getProjectsReducer, deleteProjectReducer };

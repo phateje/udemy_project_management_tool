@@ -68,6 +68,7 @@ const deleteProject = (id) => async (dispatch) => {
     await axios.delete(`http://localhost:8080/api/project/${id}`);
     dispatch({
       type: DELETE_PROJECT,
+      projectId: id,
     });
   } catch (err) {
     console.log("error", err);

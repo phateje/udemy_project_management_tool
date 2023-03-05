@@ -10,12 +10,8 @@ class Dashboard extends Component {
     this.props.getAllProjects();
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   console.log("next props!", nextProps, this.props);
-  // }
-
   render() {
-    const { projects } = this.props;
+    const { projects } = this.props.projectReducer;
     return (
       <div className="projects">
         <div className="container">
@@ -26,7 +22,7 @@ class Dashboard extends Component {
               <CreateProjectButton />
               <br />
               <hr />
-              {projects.map((project) => (
+              {projects?.map((project) => (
                 <ProjectItem key={project.projectId} project={project} />
               ))}
             </div>
@@ -38,23 +34,20 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
+  projectReducer: PropTypes.object.isRequired,
   getAllProjects: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  projects: PropTypes.array.isRequired,
 };
 
-export default connect(
-  (state) => {
-    console.log("connect with state: ", state);
+const mapStateToProps = (state) => {
+  console.log("mapStateToProps: ", state);
+  if (state.errors.error) {
+    // hacky temp error alert
+    alert(state.errors.error[0]);
+  }
 
-    if (Object.keys(state.errors).length) {
-      alert(state.errors.error[0]);
-    }
+  return {
+    projectReducer: state.projectReducer,
+  };
+};
 
-    return {
-      errors: state.errors,
-      projects: state.getAllProjects.projects,
-    };
-  },
-  { getAllProjects }
-)(Dashboard);
+export default connect(mapStateToProps, { getAllProjects })(Dashboard);
