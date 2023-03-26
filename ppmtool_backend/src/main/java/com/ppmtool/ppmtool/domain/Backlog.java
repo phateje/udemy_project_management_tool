@@ -1,9 +1,7 @@
 package com.ppmtool.ppmtool.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 public class Backlog {
@@ -11,10 +9,24 @@ public class Backlog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer tasksSequence = 0;
-    private String projectId;
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    // let's try with lazy, might change it later
+    @OneToOne(fetch = FetchType.LAZY)
+    // the "project_id" string seems to match what shows in the h2 database.. probably refers to that specifically?
+    @JoinColumn(name="projectId", nullable = false)
+    @JsonIgnore
+    private Project project;
 
     // todo
-    // 1 to 1 w project
+
     // 1 to many w tasks
 
     public Backlog() {
@@ -28,10 +40,6 @@ public class Backlog {
         this.tasksSequence = tasksSequence;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
     public Long getId() {
         return id;
     }
@@ -40,7 +48,4 @@ public class Backlog {
         return tasksSequence;
     }
 
-    public String getProjectId() {
-        return projectId;
-    }
 }

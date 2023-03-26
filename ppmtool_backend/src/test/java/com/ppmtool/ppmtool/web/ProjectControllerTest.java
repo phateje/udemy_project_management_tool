@@ -1,6 +1,7 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.Project;
+import com.ppmtool.ppmtool.repositories.BacklogRepository;
 import com.ppmtool.ppmtool.repositories.ProjectRepository;
 import com.ppmtool.ppmtool.services.ProjectService;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ public class ProjectControllerTest {
     private ProjectController projectController;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private BacklogRepository backlogRepository;
     @Autowired
     private ProjectService projectService;
 
@@ -65,6 +68,19 @@ public class ProjectControllerTest {
 
         assertThat(projectRepository.count() == 2).isTrue();
         assertThat(projectService.getById("test2").getProjectName().equals("name2")).isTrue();
+
+        assertThat(backlogRepository.findAll().iterator().hasNext()).isTrue();
+    }
+
+    @Test
+    void projectShouldGetBacklog() {
+        Project project1 = new Project();
+        project1.setProjectId("test1");
+        project1.setProjectName("name1");
+
+        projectService.upsert(project1);
+
+        assertThat(backlogRepository.findAll().iterator().hasNext()).isTrue();
     }
 
     @Test

@@ -24,9 +24,25 @@ public class Project {
     private String description;
     private Date startDate;
     private Date endDate;
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
     @Column(updatable = false)
     private Date createdAt;
     private Date updatedAt;
+
+    // fetch means project will be available when backlog is fetched, cascade means when project deleted, backlog is too
+    // "project" maps to the name of the variable defined on the backlog side
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    private Backlog backlog;
+
+
     public Date getStartDate() {
         return startDate;
     }
