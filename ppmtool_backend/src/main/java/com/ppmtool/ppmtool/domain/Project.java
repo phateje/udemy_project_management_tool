@@ -37,9 +37,9 @@ public class Project {
     private Date createdAt;
     private Date updatedAt;
 
-    // fetch means project will be available when backlog is fetched, cascade means when project deleted, backlog is too
-    // "project" maps to the name of the variable defined on the backlog side
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    // followed this one instead, much simpler https://www.baeldung.com/jpa-one-to-one
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="backlog_id", referencedColumnName = "id")
     private Backlog backlog;
 
 

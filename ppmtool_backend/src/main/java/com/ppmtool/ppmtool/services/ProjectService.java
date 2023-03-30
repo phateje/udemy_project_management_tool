@@ -19,18 +19,16 @@ public class ProjectService {
 
     public Project upsert(Project project) {
         try {
+            // TODO - if a requester sends a shit proejct with a fake Id
+            // it gets inserted, but no backlog gets created for it because of
+            // this clause. fun.
+            // Should write a test case for this
             if (project.getId() == null) {
                 Backlog backlog = new Backlog();
                 backlog.setProject(project);
                 project.setBacklog(backlog);
+                System.out.println("Im in here ma, do I have a backlog? " + project.getBacklog());
             }
-
-            // todo the course adds a query in this method to return the backlog with the project
-            // you just updated (not gonna be set on update, just on insert)
-            // that feels really wrong in so many ways, and if anything it should be handled with another
-            // query outside of this method, either at the service level, or by the client itself, but whatever
-
-            // todo see if the repository can find a backlog by project join instead of redundantly paste the project custom id on the backlog as well
 
             return projectRepository.save(project);
         } catch (Exception ex) {

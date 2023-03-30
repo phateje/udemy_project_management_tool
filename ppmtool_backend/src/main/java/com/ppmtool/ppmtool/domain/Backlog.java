@@ -18,10 +18,7 @@ public class Backlog {
         this.project = project;
     }
 
-    // let's try with lazy, might change it later
-    @OneToOne(fetch = FetchType.LAZY)
-    // the "project_id" string seems to match what shows in the h2 database.. probably refers to that specifically?
-    @JoinColumn(name="projectId", nullable = false)
+    @OneToOne(mappedBy = "backlog")
     @JsonIgnore
     private Project project;
 
