@@ -10,20 +10,11 @@ public class Backlog {
     private Long id;
     private Integer tasksSequence = 0;
 
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
     @OneToOne(mappedBy = "backlog")
     @JsonIgnore
     private Project project;
 
     // todo
-
     // 1 to many w tasks
 
     public Backlog() {
@@ -43,6 +34,14 @@ public class Backlog {
 
     public Integer getTasksSequence() {
         return tasksSequence;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
 }

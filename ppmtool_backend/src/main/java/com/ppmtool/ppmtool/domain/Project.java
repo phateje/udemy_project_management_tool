@@ -25,20 +25,16 @@ public class Project {
     private Date startDate;
     private Date endDate;
 
-    public Backlog getBacklog() {
-        return backlog;
-    }
-
-    public void setBacklog(Backlog backlog) {
-        this.backlog = backlog;
-    }
-
     @Column(updatable = false)
     private Date createdAt;
     private Date updatedAt;
 
     // followed this one instead, much simpler https://www.baeldung.com/jpa-one-to-one
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    // cannot delete manually a backlog, and if I remove the fetchType eager, I cannot insert
+    // projects because it complains IDs already exist in the database, should probably read more on
+    // how hibernate works. Only way I found to mess with a backlog was to set it to null and upsert the project
+    // which... yea..
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="backlog_id", referencedColumnName = "id")
     private Backlog backlog;
 
@@ -105,6 +101,14 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
     }
 
     @PrePersist
