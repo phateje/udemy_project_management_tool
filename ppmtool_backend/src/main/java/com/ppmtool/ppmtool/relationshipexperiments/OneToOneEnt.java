@@ -8,7 +8,7 @@ public class OneToOneEnt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "singleChildCascadeAll")
     public RootEnt root;
 
     public String name;

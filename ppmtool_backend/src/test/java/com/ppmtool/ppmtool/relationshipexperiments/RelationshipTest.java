@@ -95,6 +95,7 @@ public class RelationshipTest {
         assertThat(oneToOneRepo.count()).isEqualTo(1);
 
         try {
+            // failing since adding mappedby property on the child.
             oneToOneRepo.deleteById(1L);
             assertThat(false).isTrue();
         } catch (Exception e) {
@@ -103,5 +104,28 @@ public class RelationshipTest {
 
         assertThat(rootRepository.count()).isEqualTo(1);
         assertThat(oneToOneRepo.count()).isEqualTo(1);
+    }
+
+    @Test
+    void testClearRelationshipNotEntity() {
+        assertThat(rootRepository.count()).isEqualTo(0);
+        assertThat(oneToOneRepo.count()).isEqualTo(0);
+
+        RootEnt root = new RootEnt();
+        root.singleChildCascadeAll = new OneToOneEnt();
+        rootRepository.save(root);
+
+        assertThat(rootRepository.count()).isEqualTo(1);
+        assertThat(oneToOneRepo.count()).isEqualTo(1);
+        assertThat(rootRepository.findById(1L).get().singleChildCascadeAll).isNotNull();
+        assertThat(oneToOneRepo.findById(1L).get().root).isNotNull(); // requires (mappedBy = "singleChildCascadeAll") on the child relationship!
+
+        root.singleChildCascadeAll = null;
+        rootRepository.save(root);
+
+        assertThat(rootRepository.count()).isEqualTo(1);
+        assertThat(oneToOneRepo.count()).isEqualTo(1);
+        assertThat(rootRepository.findById(1L).get().singleChildCascadeAll).isNull();
+        assertThat(oneToOneRepo.findById(1L).get().root).isNull();
     }
 }
