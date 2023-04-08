@@ -1,5 +1,6 @@
 package com.ppmtool.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,6 +19,18 @@ public class Task {
     private String acceptanceCriteria;
     private String status;
     private Integer priority;
+    private Date dueDate;
+    @Column(updatable = false)
+    private String projectId;
+    private Date createdAt;
+    private Date updatedAt;
+
+    // refresh supposedly allows deletion of a task child and it refreshes the list on the backlog.
+    // still think this tutorial is mapping relationships backwards but maybe I just don't get them yet
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name="backlog_id", updatable = false, nullable = false)
+    @JsonIgnore
+    private Backlog backlog;
 
     public Task() {
     }
@@ -102,12 +115,6 @@ public class Task {
         this.updatedAt = updatedAt;
     }
 
-    private Date dueDate;
-    @Column(updatable = false)
-    private String projectId;
-    private Date createdAt;
-    private Date updatedAt;
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();
@@ -117,4 +124,15 @@ public class Task {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
+
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
+
 }
