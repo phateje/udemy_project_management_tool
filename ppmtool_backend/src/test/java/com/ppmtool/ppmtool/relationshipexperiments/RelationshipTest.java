@@ -94,16 +94,23 @@ public class RelationshipTest {
         assertThat(rootRepository.count()).isEqualTo(1);
         assertThat(oneToOneRepo.count()).isEqualTo(1);
 
-        try {
-            // failing since adding mappedby property on the child.
-            oneToOneRepo.deleteById(1L);
-            assertThat(false).isTrue();
-        } catch (Exception e) {
-            assertThat(e.getMessage()).contains("could not execute statement; SQL [n/a]; constraint");
-        }
+        oneToOneRepo.deleteById(1L);
 
         assertThat(rootRepository.count()).isEqualTo(1);
         assertThat(oneToOneRepo.count()).isEqualTo(1);
+        assertThat(rootRepository.findById(1L).get().singleChildCascadeAll).isNotNull();
+
+        root.singleChildCascadeAll = null;
+        rootRepository.save(root);
+
+        assertThat(rootRepository.count()).isEqualTo(1);
+        assertThat(oneToOneRepo.count()).isEqualTo(1);
+        assertThat(rootRepository.findById(1L).get().singleChildCascadeAll).isNull();
+
+        oneToOneRepo.deleteById(1L);
+
+        assertThat(rootRepository.count()).isEqualTo(1);
+        assertThat(oneToOneRepo.count()).isEqualTo(0);
     }
 
     @Test
