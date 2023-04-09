@@ -22,6 +22,7 @@ public class TaskService {
         Integer taskSequence = bl.getTasksSequence();
         taskSequence++;
         task.setProjectSequence(projectId + "_" + taskSequence);
+        bl.setTasksSequence(taskSequence);
         task.setProjectId(projectId);
 
         if (task.getPriority() == null || task.getPriority() == 0) {
@@ -31,6 +32,7 @@ public class TaskService {
             task.setStatus("NEW");
         }
 
+        taskRepo.save(task);
         return task;
     }
 
