@@ -19,7 +19,7 @@ public class ProjectService {
 
     public Project upsert(Project project) {
         try {
-            // TODO - if a requester sends a shit proejct with a fake Id
+            // TODO - if a requester sends a shit project with a fake Id
             // it gets inserted, but no backlog gets created for it because of
             // this clause. fun.
             // Should write a test case for this
@@ -28,11 +28,11 @@ public class ProjectService {
                 backlog.setProject(project);
                 backlog.setProjectId(project.getProjectId());
                 project.setBacklog(backlog);
-                System.out.println("Im in here ma, do I have a backlog? " + project.getBacklog());
             }
 
             return projectRepository.save(project);
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
             throw new ProjectException("projectId " + project.getProjectId() + " already exists in the database");
         }
     }

@@ -1,6 +1,7 @@
 package com.ppmtool.ppmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -35,6 +36,10 @@ public class Project {
     // how hibernate works. Only way I found to mess with a backlog was to set it to null and upsert the project
     // which... yea..
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    // this is only used to reduce the response size that's sent to the server, and it's infuriating
+    // found other ideas online on how to retrieve a partial set of fields for an entity but right now
+    // I'm tring to power through this course to get to the spring boot security bit
+    @JsonIgnore
     private Backlog backlog;
 
     public Date getStartDate() {

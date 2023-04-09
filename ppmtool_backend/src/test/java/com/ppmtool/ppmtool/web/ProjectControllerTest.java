@@ -1,9 +1,12 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.Project;
+import com.ppmtool.ppmtool.domain.Task;
 import com.ppmtool.ppmtool.repositories.BacklogRepository;
 import com.ppmtool.ppmtool.repositories.ProjectRepository;
+import com.ppmtool.ppmtool.repositories.TaskRepository;
 import com.ppmtool.ppmtool.services.ProjectService;
+import com.ppmtool.ppmtool.services.TaskService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +15,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -30,6 +35,12 @@ public class ProjectControllerTest {
     private BacklogRepository backlogRepository;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private TaskRepository taskRepository;
+
+
 
     @Test
     void contextLoads() {
@@ -146,5 +157,38 @@ public class ProjectControllerTest {
 
         projectController.delete("test");
         assertThat(projectRepository.count() == 0).isTrue();
+    }
+
+    @Test
+    void tasksShouldGoOnProperProject() {
+        Project p1 = new Project();
+        p1.setProjectName("test1");
+        p1.setProjectId("0001");
+        projectService.upsert(p1);
+
+        Project p2 = new Project();
+        p2.setProjectName("test2");
+        p2.setProjectId("0002");
+        projectService.upsert(p2);
+
+        Task task = new Task();
+        task.setSummary("test");
+        taskService.addTask("0001", task);
+        task.setId(null);
+        taskService.addTask("0001", task);
+        task.setId(null);
+        taskService.addTask("0001", task);
+        task.setId(null);
+        taskService.addTask("0002", task);
+        task.setId(null);
+        taskService.addTask("0002", task);
+
+        var tasks = taskRepository.findAll().iterator();
+        assertThat(tasks.next().getProjectSequence()).isEqualTo("0001_1");
+        assertThat(tasks.next().getProjectSequence()).isEqualTo("0001_2");
+        assertThat(tasks.next().getProjectSequence()).isEqualTo("0001_3");
+        assertThat(tasks.next().getProjectSequence()).isEqualTo("0002_1");
+        assertThat(tasks.next().getProjectSequence()).isEqualTo("0002_2");
+
     }
 }

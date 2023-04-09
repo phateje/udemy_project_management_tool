@@ -32,6 +32,7 @@ public class TaskService {
             task.setStatus("NEW");
         }
 
+        backlogRepo.save(bl);
         taskRepo.save(task);
         return task;
     }
