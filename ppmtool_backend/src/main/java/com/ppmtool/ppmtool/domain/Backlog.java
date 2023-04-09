@@ -13,6 +13,8 @@ public class Backlog {
     private Long id;
     private Integer tasksSequence = 0;
 
+    private String projectId;
+
     @OneToOne(mappedBy = "backlog")
     @JsonIgnore
     private Project project;
@@ -52,6 +54,15 @@ public class Backlog {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
 }

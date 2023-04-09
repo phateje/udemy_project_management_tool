@@ -35,9 +35,7 @@ public class Project {
     // how hibernate works. Only way I found to mess with a backlog was to set it to null and upsert the project
     // which... yea..
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="backlog_id", referencedColumnName = "id")
     private Backlog backlog;
-
 
     public Date getStartDate() {
         return startDate;

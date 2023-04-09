@@ -26,6 +26,7 @@ public class ProjectService {
             if (project.getId() == null) {
                 Backlog backlog = new Backlog();
                 backlog.setProject(project);
+                backlog.setProjectId(project.getProjectId());
                 project.setBacklog(backlog);
                 System.out.println("Im in here ma, do I have a backlog? " + project.getBacklog());
             }
