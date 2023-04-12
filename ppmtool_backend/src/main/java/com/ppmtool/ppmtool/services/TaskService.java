@@ -17,6 +17,10 @@ public class TaskService {
 
     public Task addTask(String projectId, Task task) {
         Backlog bl = backlogRepo.findByProjectId(projectId);
+        if (bl == null) {
+            throw new TaskException("couldn't find a backlog for project id " + projectId);
+        }
+
         task.setBacklog(bl);
 
         Integer taskSequence = bl.getTasksSequence();
@@ -36,5 +40,9 @@ public class TaskService {
         taskRepo.save(task);
         return task;
     }
-
+    public class TaskException extends RuntimeException {
+        public TaskException(String message) {
+            super(message);
+        }
+    }
 }
