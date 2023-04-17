@@ -29,4 +29,15 @@ public class TaskController {
         }
         return new ResponseEntity<>(taskService.addTask(projectId, task), HttpStatus.CREATED);
     }
+
+    @GetMapping("/all/{projectId}")
+    public ResponseEntity<?> getTasksByProject(@PathVariable String projectId) {
+        return new ResponseEntity<>(taskService.getAllTasks(projectId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectSequence}")
+    public ResponseEntity<?> getTask(@PathVariable String projectSequence) {
+        return new ResponseEntity<>(taskService.getByProjectSequence(projectSequence), HttpStatus.OK);
+
+    }
 }

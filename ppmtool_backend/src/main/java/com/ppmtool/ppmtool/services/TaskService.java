@@ -40,6 +40,15 @@ public class TaskService {
         taskRepo.save(task);
         return task;
     }
+
+    public Iterable<Task> getAllTasks(String proejctId) {
+        return taskRepo.findByProjectId(proejctId);
+    }
+
+    public Task getByProjectSequence(String projectSequence) {
+        return taskRepo.findByProjectSequence(projectSequence);
+    }
+
     public class TaskException extends RuntimeException {
         public TaskException(String message) {
             super(message);
