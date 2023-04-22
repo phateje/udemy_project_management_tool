@@ -1,6 +1,7 @@
 package com.ppmtool.ppmtool.services;
 
 import com.ppmtool.ppmtool.domain.Backlog;
+import com.ppmtool.ppmtool.domain.Project;
 import com.ppmtool.ppmtool.domain.Task;
 import com.ppmtool.ppmtool.repositories.BacklogRepository;
 import com.ppmtool.ppmtool.repositories.TaskRepository;
@@ -47,6 +48,14 @@ public class TaskService {
 
     public Task getByProjectSequence(String projectSequence) {
         return taskRepo.findByProjectSequence(projectSequence);
+    }
+
+    public void deleteByProjectSequence(String projectSequence) {
+        Task task = taskRepo.findByProjectSequence(projectSequence);
+        if (task != null) {
+            taskRepo.delete(task);
+        }
+
     }
 
     public class TaskException extends RuntimeException {

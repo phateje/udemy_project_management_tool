@@ -10,6 +10,7 @@ import com.ppmtool.ppmtool.services.TaskService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -39,6 +41,8 @@ public class ProjectControllerTest {
     private TaskService taskService;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private TaskController taskController;
 
 
 
@@ -78,9 +82,8 @@ public class ProjectControllerTest {
         projectRepository.save(project2);
 
         assertThat(projectRepository.count() == 2).isTrue();
-        assertThat(projectService.getById("test2").getProjectName().equals("name2")).isTrue();
-
-        assertThat(backlogRepository.findAll().iterator().hasNext()).isTrue();
+        assertThat(projectService.getById("test2").getProjectName()).isEqualTo("name2");
+        assertThat(projectService.getById("test1").getProjectName()).isEqualTo("name1");
     }
 
     @Test
@@ -189,6 +192,83 @@ public class ProjectControllerTest {
         assertThat(tasks.next().getProjectSequence()).isEqualTo("0001_3");
         assertThat(tasks.next().getProjectSequence()).isEqualTo("0002_1");
         assertThat(tasks.next().getProjectSequence()).isEqualTo("0002_2");
-
     }
+
+    @Test
+    void taskGetterAllShouldReturnEmptyList() {
+        var response = taskController.getTasksByProject("fakeId");
+        assertThat(response.getBody()).isInstanceOf(Iterable.class);
+        assertThat((Iterable<Task>) response.getBody()).isEmpty();
+    }
+
+    @Test
+    void taskGetterAllShouldReturnSomething() {
+        Project p1 = new Project();
+        p1.setProjectName("test1");
+        p1.setProjectId("0001");
+        projectService.upsert(p1);
+
+        Task task = new Task();
+        task.setSummary("test");
+        taskService.addTask("0001", task);
+
+        var response = taskController.getTasksByProject("0001");
+        assertThat(response.getBody()).isInstanceOf(Iterable.class);
+        assertThat((Iterable<Task>) response.getBody()).isNotEmpty();
+    }
+
+    @Test
+    void getTaskById() {
+        Project p1 = new Project();
+        p1.setProjectName("test1");
+        p1.setProjectId("0001");
+        projectService.upsert(p1);
+
+        Task task = new Task();
+        task.setSummary("test");
+        taskService.addTask("0001", task);
+
+        assertThat(((Task) taskController.getTask("0001_1").getBody()).getSummary()).isEqualTo("test");
+    }
+
+    @Test
+    void getTaskByIdShouldErrorOut() {
+        ResponseEntity<?> res = taskController.getTask("fake");
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(((Map<String, List<String>>)res.getBody()).get("error").get(0)).isEqualTo("fake not found");
+    }
+
+    @Test
+    void deleteById() {
+        Project p1 = new Project();
+        p1.setProjectName("test1");
+        p1.setProjectId("0001");
+        projectService.upsert(p1);
+
+        Task task = new Task();
+        task.setSummary("test");
+        taskService.addTask("0001", task);
+
+        assertThat(taskRepository.count()).isEqualTo(1);
+        assertThat(taskController.deleteTask("0001_1").getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(taskRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void deleteById2() {
+        Project p1 = new Project();
+        p1.setProjectName("test1");
+        p1.setProjectId("0001");
+        projectService.upsert(p1);
+
+        Task task = new Task();
+        task.setSummary("test");
+        taskService.addTask("0001", task);
+
+        assertThat(taskRepository.count()).isEqualTo(1);
+        assertThat(taskController.deleteTask("fake").getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(taskRepository.count()).isEqualTo(1);
+    }
+
 }

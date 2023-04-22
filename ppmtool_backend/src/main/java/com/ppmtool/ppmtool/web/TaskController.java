@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.*;
+
 @RestController
 @RequestMapping("/api/task")
 @CrossOrigin
@@ -32,12 +34,25 @@ public class TaskController {
 
     @GetMapping("/all/{projectId}")
     public ResponseEntity<?> getTasksByProject(@PathVariable String projectId) {
+        // todo throw exceptions with errors if query returns nothing? (no: empty list is valid)
         return new ResponseEntity<>(taskService.getAllTasks(projectId), HttpStatus.OK);
     }
 
     @GetMapping("/{projectSequence}")
     public ResponseEntity<?> getTask(@PathVariable String projectSequence) {
+        // todo throw exceptions with errors if query returns nothing? (yes)
+        Task t = taskService.getByProjectSequence(projectSequence);
+        if (t == null) {
+            Map<String, List<String>> res = new HashMap<>();
+            res.put("error", Arrays.asList(projectSequence + " not found"));
+            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(taskService.getByProjectSequence(projectSequence), HttpStatus.OK);
+    }
 
+    @DeleteMapping("/{projectSequence}")
+    public ResponseEntity<?> deleteTask(@PathVariable String projectSequence) {
+        taskService.deleteByProjectSequence(projectSequence);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
