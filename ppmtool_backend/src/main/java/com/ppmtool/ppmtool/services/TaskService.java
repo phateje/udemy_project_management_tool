@@ -16,6 +16,9 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepo;
 
+    // TODO - find a way to avoid nulling out fields that are not set on the task when this method is called I guess
+    // for now this requires ALL fields to be set on the task if you want the update not to delete relevant data (e.g. the created date for one)
+    // could also use a patch method and validate that in a post the id is always null but ehh
     public Task addTask(String projectId, Task task) {
         Backlog bl = backlogRepo.findByProjectId(projectId);
         if (bl == null) {
@@ -24,11 +27,16 @@ public class TaskService {
 
         task.setBacklog(bl);
 
-        Integer taskSequence = bl.getTasksSequence();
-        taskSequence++;
-        task.setProjectSequence(projectId + "_" + taskSequence);
-        bl.setTasksSequence(taskSequence);
-        task.setProjectId(projectId);
+        // this doesn't really handle the case of a bullshit Id passed onto a new task
+        // should probably check the database to make sure a task with that id exists and that
+        // it belongs to the correct project but for now this'll do
+        if (task.getId() == null) {
+            Integer taskSequence = bl.getTasksSequence();
+            taskSequence++;
+            task.setProjectSequence(projectId + "_" + taskSequence);
+            bl.setTasksSequence(taskSequence);
+            task.setProjectId(projectId);
+        }
 
         if (task.getPriority() == null || task.getPriority() == 0) {
             task.setPriority(3);

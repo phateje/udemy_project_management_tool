@@ -1,6 +1,7 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.Task;
+import com.ppmtool.ppmtool.repositories.TaskRepository;
 import com.ppmtool.ppmtool.services.ControllerUtils;
 import com.ppmtool.ppmtool.services.TaskService;
 import jakarta.validation.Valid;
@@ -23,13 +24,17 @@ public class TaskController {
     @Autowired
     private ControllerUtils controllerUtils;
 
+    @Autowired
+    private TaskRepository taskRepository;
+
     @PostMapping("/{projectId}")
     public ResponseEntity<?> addTask(@Valid @RequestBody Task task, BindingResult result, @PathVariable String projectId) {
         var errors = controllerUtils.getInvalidObjectErrors(result);
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(taskService.addTask(projectId, task), HttpStatus.CREATED);
+        taskService.addTask(projectId, task);
+        return new ResponseEntity<>(taskRepository.findById(task.getId()), HttpStatus.CREATED);
     }
 
     @GetMapping("/all/{projectId}")
