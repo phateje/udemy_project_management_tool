@@ -10,6 +10,9 @@ import Dashboard from "./components/Dashboard";
 import UpdateProject, {
   loader as projectLoader,
 } from "./components/Project/UpdateProject";
+import ProjectBoard, {
+  loader as tasksLoader,
+} from "./components/ProjectBoard/ProjectBoard";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +32,16 @@ const router = createBrowserRouter([
         path: "/updateProject/:projectId",
         element: <UpdateProject />,
         loader: projectLoader,
+      },
+      {
+        path: "/projectBoard/:projectId",
+        element: <ProjectBoard />,
+        loader: tasksLoader,
+      },
+      {
+        path: "/addTask/:projectId",
+        element: <AddProject />,
+        // todo add loader
       },
     ],
   },

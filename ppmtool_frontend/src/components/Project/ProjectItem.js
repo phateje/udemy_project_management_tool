@@ -30,7 +30,9 @@ class ProjectItem extends Component {
                   type="button"
                   className="list-group-item-primary list-group-item "
                 >
-                  Project Board
+                  <Link to={`/projectBoard/${project.projectId}`}>
+                    Project Board
+                  </Link>
                 </button>
 
                 <button

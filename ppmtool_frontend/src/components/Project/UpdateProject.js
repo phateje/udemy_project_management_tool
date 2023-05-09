@@ -8,6 +8,7 @@ export async function loader({ params }) {
   if (!res) {
     throw new Error(`No project found with id: ${params.projectId}`);
   }
+  console.log(`the loaded data!`, res);
   return res;
 }
 

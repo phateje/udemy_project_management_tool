@@ -82,4 +82,11 @@ const deleteProject = (id) => async (dispatch) => {
   }
 };
 
-export { createProject, getAllProjects, getProject, deleteProject };
+const getTasks = (id) => {
+  return async () => {
+    const res = await axios.get(`http://localhost:8080/api/task/all/${id}`);
+    return res.data;
+  };
+};
+
+export { createProject, getAllProjects, getProject, deleteProject, getTasks };
