@@ -1,9 +1,16 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
+import { deleteTask } from "../../../actions/projectActions";
 
 export default function Task(props) {
   const task = props.task;
   const projectId = useParams().projectId;
+
+  const onDelete = () => {
+    deleteTask(task.projectSequence)();
+    // TODO - figure out reloading all tasks in the project board
+  };
+
   return (
     <div className="card mb-1 bg-light">
       <div className="card-header text-primary">
@@ -20,7 +27,9 @@ export default function Task(props) {
           View / Update
         </Link>
 
-        <button className="btn btn-danger ml-4">Delete</button>
+        <button className="btn btn-danger ml-4" onClick={onDelete}>
+          Delete
+        </button>
       </div>
     </div>
   );

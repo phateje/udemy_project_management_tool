@@ -106,6 +106,13 @@ const upsertTask = (projId, task) => {
   };
 };
 
+const deleteTask = (id) => {
+  return async () => {
+    const res = await axios.delete(`http://localhost:8080/api/task/${id}`);
+    return res.data;
+  };
+};
+
 export {
   createProject,
   getAllProjects,
@@ -114,4 +121,5 @@ export {
   getTasks,
   getTask,
   upsertTask,
+  deleteTask,
 };
