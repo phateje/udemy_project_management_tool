@@ -89,4 +89,21 @@ const getTasks = (id) => {
   };
 };
 
-export { createProject, getAllProjects, getProject, deleteProject, getTasks };
+const upsertTask = (projId, task) => {
+  return async () => {
+    const res = await axios.post(
+      `http://localhost:8080/api/task/${projId}`,
+      task
+    );
+    return res.data;
+  };
+};
+
+export {
+  createProject,
+  getAllProjects,
+  getProject,
+  deleteProject,
+  getTasks,
+  upsertTask,
+};
