@@ -19,7 +19,7 @@ public class TaskService {
     // TODO - find a way to avoid nulling out fields that are not set on the task when this method is called I guess
     // for now this requires ALL fields to be set on the task if you want the update not to delete relevant data (e.g. the created date for one)
     // could also use a patch method and validate that in a post the id is always null but ehh
-    public Task addTask(String projectId, Task task) {
+    public synchronized Task addTask(String projectId, Task task) {
         Backlog bl = backlogRepo.findByProjectId(projectId);
         if (bl == null) {
             throw new TaskException("couldn't find a backlog for project id " + projectId);
