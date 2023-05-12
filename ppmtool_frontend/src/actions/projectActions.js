@@ -89,6 +89,13 @@ const getTasks = (id) => {
   };
 };
 
+const getTask = (id) => {
+  return async () => {
+    const res = await axios.get(`http://localhost:8080/api/task/${id}`);
+    return res.data;
+  };
+};
+
 const upsertTask = (projId, task) => {
   return async () => {
     const res = await axios.post(
@@ -105,5 +112,6 @@ export {
   getProject,
   deleteProject,
   getTasks,
+  getTask,
   upsertTask,
 };

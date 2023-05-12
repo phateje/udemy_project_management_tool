@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useParams } from "react-router-dom";
 import { getTasks } from "../../actions/projectActions";
 import Task from "./Tasks/Task";
 
@@ -8,19 +8,15 @@ export async function loader({ params }) {
   if (!res) {
     throw new Error(`Something broke :(`);
   }
-  // hacky workaround to pass the project id to the actual component body
-  // you can use params in the constructor, but I'm not sure how that would
-  // work given the use of the router and the fact that we don't have a
-  // variable state we can use there
-  return { tasks: res, projectId: params.projectId };
+  return res;
 }
 
 export default function ProjectBoard() {
-  const { tasks, projectId } = useLoaderData();
+  const projectId = useParams().projectId;
+  const tasks = useLoaderData();
   console.log("loader data: ", tasks, projectId);
   return (
     <div className="container">
-      {/* TODO WIRE ME UP YOO */}
       <Link to={`/addTask/${projectId}`} className="btn btn-primary mb-3">
         <i className="fas fa-plus-circle"> Create Project Task</i>
       </Link>

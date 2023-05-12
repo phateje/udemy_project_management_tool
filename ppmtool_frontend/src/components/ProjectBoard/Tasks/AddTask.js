@@ -1,24 +1,40 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { upsertTask } from "../../../actions/projectActions";
+import { Link, useParams, useNavigate, useLoaderData } from "react-router-dom";
+import { getTask, upsertTask } from "../../../actions/projectActions";
+
+export async function loader({ params }) {
+  console.log("loader params", params);
+  if (!params.taskId) return;
+
+  let res = await getTask(params.taskId)();
+  if (!res) {
+    throw new Error(`Something broke :(`);
+  }
+  return res;
+}
 
 export default function AddProjectTask() {
-  const params = useParams();
-  let projectId = params.projectId;
+  const projectId = useParams().projectId;
+  const navigate = useNavigate();
+  const loadedTask = { ...useLoaderData() };
 
-  async function handleSubmit(evt) {
+  console.log("loaded task", loadedTask);
+
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
-    let task = {};
+
+    let task = { ...loadedTask };
     [...evt.target]
       .filter((fld) => fld.name)
       .map((fld) => (task[fld.name] = fld.value));
     console.log("the task: ", task, projectId);
+
     const res = await upsertTask(projectId, task)();
     console.log("the response: ", res);
-    // todo figure redirection
-  }
 
-  // modify component so we can use it for upserts if a prop is passed
+    navigate(`/projectBoard/${projectId}`);
+  };
+
   return (
     <div className="add-PBI">
       <div className="container">
@@ -27,8 +43,15 @@ export default function AddProjectTask() {
             <Link to={`/projectBoard/${projectId}`} className="btn btn-light">
               Back to Project Board
             </Link>
-            <h4 className="display-4 text-center">Add/Update Task</h4>
-            <p className="lead text-center">Project Name + Project Code</p>
+            <h4 className="display-4 text-center">
+              {loadedTask.projectSequence ? "Update" : "Add"} Task
+            </h4>
+            {loadedTask.projectSequence ? (
+              <p className="lead text-center">{loadedTask.projectSequence}</p>
+            ) : (
+              ""
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <input
@@ -36,6 +59,7 @@ export default function AddProjectTask() {
                   className="form-control form-control-lg"
                   name="summary"
                   placeholder="Project Task summary"
+                  defaultValue={loadedTask.summary}
                 />
               </div>
               <div className="form-group">
@@ -43,6 +67,7 @@ export default function AddProjectTask() {
                   className="form-control form-control-lg"
                   placeholder="Acceptance Criteria"
                   name="acceptanceCriteria"
+                  defaultValue={loadedTask.acceptanceCriteria}
                 />
               </div>
               <h6>Due Date</h6>
@@ -51,12 +76,14 @@ export default function AddProjectTask() {
                   type="date"
                   className="form-control form-control-lg"
                   name="dueDate"
+                  defaultValue={loadedTask.dueDate?.slice(0, 10)}
                 />
               </div>
               <div className="form-group">
                 <select
                   className="form-control form-control-lg"
                   name="priority"
+                  defaultValue={loadedTask.priority}
                 >
                   <option value={0}>Select Priority</option>
                   <option value={1}>High</option>
@@ -66,7 +93,11 @@ export default function AddProjectTask() {
               </div>
 
               <div className="form-group">
-                <select className="form-control form-control-lg" name="status">
+                <select
+                  className="form-control form-control-lg"
+                  name="status"
+                  defaultValue={loadedTask.status}
+                >
                   <option value="TO DO">TO DO</option>
                   <option value="IN PROGRESS">IN PROGRESS</option>
                   <option value="DONE">DONE</option>

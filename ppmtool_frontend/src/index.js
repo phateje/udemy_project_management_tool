@@ -6,7 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import AddProject from "./components/Project/AddProject";
-import AddTask from "./components/ProjectBoard/Tasks/AddTask";
+import AddTask, {
+  loader as taskLoader,
+} from "./components/ProjectBoard/Tasks/AddTask";
 import Dashboard from "./components/Dashboard";
 import UpdateProject, {
   loader as projectLoader,
@@ -43,6 +45,11 @@ const router = createBrowserRouter([
         path: "/addTask/:projectId",
         element: <AddTask />,
         // todo add loader
+      },
+      {
+        path: "/addTask/:projectId/:taskId",
+        element: <AddTask />,
+        loader: taskLoader,
       },
     ],
   },
