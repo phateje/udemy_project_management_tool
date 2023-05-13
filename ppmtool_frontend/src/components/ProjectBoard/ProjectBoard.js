@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 import { Link, useLoaderData, useParams } from "react-router-dom";
 import { getTasks } from "../../actions/projectActions";
 import Task from "./Tasks/Task";
@@ -13,8 +13,12 @@ export async function loader({ params }) {
 
 export default function ProjectBoard() {
   const projectId = useParams().projectId;
-  const tasks = useLoaderData();
-  console.log("loader data: ", tasks, projectId);
+  const [tasks, setTasks] = useState(useLoaderData());
+
+  const updateTasks = (removedTaskId) => {
+    setTasks(tasks.filter((t) => t.projectSequence !== removedTaskId));
+  };
+
   return (
     <div className="container">
       <Link to={`/addTask/${projectId}`} className="btn btn-primary mb-3">
@@ -33,7 +37,7 @@ export default function ProjectBoard() {
             {tasks
               .filter((task) => task.status === "TO DO")
               .map((task) => (
-                <Task task={task} />
+                <Task task={task} updateTasks={updateTasks} />
               ))}
           </div>
           <div className="col-md-4">

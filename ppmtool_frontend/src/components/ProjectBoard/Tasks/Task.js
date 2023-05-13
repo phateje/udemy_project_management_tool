@@ -4,11 +4,12 @@ import { deleteTask } from "../../../actions/projectActions";
 
 export default function Task(props) {
   const task = props.task;
+  const updateTasks = props.updateTasks;
   const projectId = useParams().projectId;
 
   const onDelete = () => {
     deleteTask(task.projectSequence)();
-    // TODO - figure out reloading all tasks in the project board
+    updateTasks(task.projectSequence);
   };
 
   return (
