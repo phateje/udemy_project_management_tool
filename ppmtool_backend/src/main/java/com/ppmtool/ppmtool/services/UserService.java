@@ -17,6 +17,7 @@ public class UserService {
     public User saveUser(User user) {
         // implement any and all validation
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setConfirmPassword("");
         return userRepository.save(user);
     }
 }
