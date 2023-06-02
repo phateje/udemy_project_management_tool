@@ -1,10 +1,12 @@
 package com.ppmtool.ppmtool.security;
 
 import com.ppmtool.ppmtool.domain.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -37,5 +39,21 @@ public class JwtTokenProvider {
                 .signWith(getSigningKey())
                 .compact();
 
+    }
+
+    public boolean isTokenValid(String token) {
+        // this runs at registration (or likely login, when you have no stupid token to pass in)
+        try {
+            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception ex) {
+            System.out.println("GAH " + ex);
+        }
+        return false;
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        return Long.parseLong(String.valueOf(claims.get("id")));
     }
 }
