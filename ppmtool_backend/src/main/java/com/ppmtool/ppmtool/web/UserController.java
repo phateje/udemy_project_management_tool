@@ -1,8 +1,9 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.User;
-import com.ppmtool.ppmtool.payload.JWTLoginSuccessResponse;
+import com.ppmtool.ppmtool.payload.JwtLoginSuccessResponse;
 import com.ppmtool.ppmtool.payload.LoginRequest;
+import com.ppmtool.ppmtool.security.JwtTokenProvider;
 import com.ppmtool.ppmtool.services.ControllerUtils;
 import com.ppmtool.ppmtool.services.UserService;
 import com.ppmtool.ppmtool.validator.UserValidator;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,9 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
         // might be better to have this in the service, but it's more convenient to have it here cause of the binding result?
@@ -56,8 +61,12 @@ public class UserController {
                 )
         );
 
-        System.out.println("authentication: " + authentication.isAuthenticated()+ ", name " + authentication.getName());
-
-        return ResponseEntity.ok(new JWTLoginSuccessResponse(true, "sometoken"));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return ResponseEntity.ok(
+                new JwtLoginSuccessResponse(
+                        true,
+                        "Bearer " + jwtTokenProvider.generateToken(authentication)
+                )
+        );
     }
 }

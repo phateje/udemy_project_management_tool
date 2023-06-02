@@ -1,7 +1,7 @@
 package com.ppmtool.ppmtool.payload;
 
-public class JWTLoginSuccessResponse {
-    public JWTLoginSuccessResponse(boolean success, String token) {
+public class JwtLoginSuccessResponse {
+    public JwtLoginSuccessResponse(boolean success, String token) {
         this.success = success;
         this.token = token;
     }
