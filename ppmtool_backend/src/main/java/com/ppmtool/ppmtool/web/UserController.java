@@ -1,6 +1,8 @@
 package com.ppmtool.ppmtool.web;
 
 import com.ppmtool.ppmtool.domain.User;
+import com.ppmtool.ppmtool.payload.JWTLoginSuccessResponse;
+import com.ppmtool.ppmtool.payload.LoginRequest;
 import com.ppmtool.ppmtool.services.ControllerUtils;
 import com.ppmtool.ppmtool.services.UserService;
 import com.ppmtool.ppmtool.validator.UserValidator;
@@ -8,6 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +32,9 @@ public class UserController {
     @Autowired
     private ControllerUtils controllerUtils;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
         // might be better to have this in the service, but it's more convenient to have it here cause of the binding result?
@@ -36,5 +44,20 @@ public class UserController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        System.out.println("authentication: " + authentication.isAuthenticated()+ ", name " + authentication.getName());
+
+        return ResponseEntity.ok(new JWTLoginSuccessResponse(true, "sometoken"));
     }
 }
