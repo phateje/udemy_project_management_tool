@@ -27,7 +27,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         return u;
     }
 
-    @Transactional
     public User loadUserById(Long id) {
         Optional<User> u = userRepository.findById(id);
         if (u.isPresent()) {
