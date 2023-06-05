@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/project")
 @CrossOrigin
@@ -20,8 +22,14 @@ public class ProjectController {
     @Autowired
     private ControllerUtils controllerUtils;
 
-    @PostMapping("")
+    // used for tests only right now
+    // @PostMapping("")
     public ResponseEntity<?> upsert(@Valid @RequestBody Project project, BindingResult result) {
+        return this.upsert(project, result, null);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> upsert(@Valid @RequestBody Project project, BindingResult result, Principal principal) {
         // binding result just gets populated for you... neat,
         // so it seems that binding result and the valid annotations just runs through the validation constraints
         // that don't need a trip to the database to validate. E.g. a string length is validated immediately
@@ -31,7 +39,8 @@ public class ProjectController {
         if (!errors.isEmpty()) {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(projectService.upsert(project), HttpStatus.CREATED);
+        String username = principal != null ? principal.getName() : null;
+        return new ResponseEntity<>(projectService.upsert(project, username), HttpStatus.CREATED);
     }
 
     @GetMapping("/{projectId}")

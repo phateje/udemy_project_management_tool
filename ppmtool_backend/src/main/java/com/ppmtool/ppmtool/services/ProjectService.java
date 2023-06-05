@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.security.Principal;
+
 @Service
 public class ProjectService {
     @Autowired
@@ -17,7 +19,13 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
     public Project upsert(Project project) {
+        return this.upsert(project, null);
+    }
+    public Project upsert(Project project, String username) {
         try {
             // TODO - if a requester sends a shit project with a fake Id
             // it gets inserted, but no backlog gets created for it because of
@@ -28,6 +36,12 @@ public class ProjectService {
                 backlog.setProject(project);
                 backlog.setProjectId(project.getProjectId());
                 project.setBacklog(backlog);
+            }
+
+            if (username != null && !username.isBlank()) {
+                // TODO could throw exception, ok for now
+                // could also overwrite the user if a different user somehow updates. Also ok for now
+                project.setUser(customUserDetailsService.loadUserByUsername(username));
             }
 
             return projectRepository.save(project);

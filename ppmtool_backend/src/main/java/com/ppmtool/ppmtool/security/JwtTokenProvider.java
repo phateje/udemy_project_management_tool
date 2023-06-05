@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
-    public static final Integer JWT_EXPIRY_TIME = 30_000;
+    public static final Integer JWT_EXPIRY_TIME = 30_000_000;
     private static final String SECRET_KEY = "somesuperdupersecretthatshouldnotbecommittedtoarepo";
 
     private Key getSigningKey() {
@@ -42,7 +42,8 @@ public class JwtTokenProvider {
     }
 
     public boolean isTokenValid(String token) {
-        // this runs at registration (or likely login, when you have no stupid token to pass in)
+        // TODO this runs at registration (or likely login, when you have no stupid token to pass in)
+        // additionally fires an exception when logging into h2, really look into only validating this where needed
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;

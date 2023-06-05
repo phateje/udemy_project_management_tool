@@ -30,6 +30,18 @@ public class Project {
     private Date createdAt;
     private Date updatedAt;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
+
     // followed this one instead, much simpler https://www.baeldung.com/jpa-one-to-one
     // cannot delete manually a backlog, and if I remove the fetchType eager, I cannot insert
     // projects because it complains IDs already exist in the database, should probably read more on
