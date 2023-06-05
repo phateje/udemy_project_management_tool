@@ -5,11 +5,7 @@ import com.ppmtool.ppmtool.domain.Project;
 import com.ppmtool.ppmtool.repositories.BacklogRepository;
 import com.ppmtool.ppmtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import java.security.Principal;
 
 @Service
 public class ProjectService {
@@ -51,17 +47,17 @@ public class ProjectService {
         }
     }
 
-    public Project getById(String projectId) {
-        return projectRepository.findByProjectId(projectId);
+    public Project getById(String projectId, String username) {
+        return projectRepository.findByProjectIdAndUserUsername(projectId, username);
     }
 
     // should order by last modified date desc for convenience
-    public Iterable<Project> getAll() {
-        return projectRepository.findAll();
+    public Iterable<Project> getAll(String username) {
+        return projectRepository.findByUserUsername(username);
     }
 
-    public void delete(String projectId) {
-        Project project = projectRepository.findByProjectId(projectId);
+    public void delete(String projectId, String username) {
+        Project project = projectRepository.findByProjectIdAndUserUsername(projectId, username);
         if (project != null) {
             projectRepository.deleteById(project.getId());
         }

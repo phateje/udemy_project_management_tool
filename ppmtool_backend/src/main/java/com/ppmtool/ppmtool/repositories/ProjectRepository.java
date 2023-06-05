@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
-    Project findByProjectId(String projectId); //findByProjectId is automagically implemented by the framework, intellisense SHOULD show it, it didn't for me but whatevs
+    Project findByProjectIdAndUserUsername(String projectId, String username); //findByProjectId is automagically implemented by the framework, intellisense SHOULD show it, it didn't for me but whatevs
+
+    Iterable<Project> findByUserUsername(String username);
 
     // yay, just like above if you declare "findByName it breaks cause the property doesn't exist
     // projectName though does, so this gets autoimplemented.

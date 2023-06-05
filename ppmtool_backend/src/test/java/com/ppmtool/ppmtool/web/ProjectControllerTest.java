@@ -82,8 +82,8 @@ public class ProjectControllerTest {
         projectRepository.save(project2);
 
         assertThat(projectRepository.count() == 2).isTrue();
-        assertThat(projectService.getById("test2").getProjectName()).isEqualTo("name2");
-        assertThat(projectService.getById("test1").getProjectName()).isEqualTo("name1");
+        assertThat(projectService.getById("test2", "").getProjectName()).isEqualTo("name2");
+        assertThat(projectService.getById("test1", "").getProjectName()).isEqualTo("name1");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ProjectControllerTest {
 
     @Test
     void controllerGetProjectOrNull() {
-        var resp = (ResponseEntity<Project>) projectController.getById("test");
+        var resp = (ResponseEntity<Project>) projectController.getById("test", null);
         assertThat(resp.getBody() == null).isTrue();
 
         Project project = new Project();
@@ -125,7 +125,7 @@ public class ProjectControllerTest {
         project.setProjectName("name");
         projectRepository.save(project);
 
-        resp = (ResponseEntity<Project>) projectController.getById("test");
+        resp = (ResponseEntity<Project>) projectController.getById("test", null);
         assertThat(resp.getBody().getProjectName().equals("name")).isTrue();
     }
 
@@ -140,7 +140,7 @@ public class ProjectControllerTest {
         project.setProjectName("name2");
         projectRepository.save(project);
 
-        var resp = (ResponseEntity<Iterable<Project>>) projectController.getAll();
+        var resp = (ResponseEntity<Iterable<Project>>) projectController.getAll(null);
         Iterator<Project> itor = resp.getBody().iterator();
         assertThat(itor.next() != null).isTrue();
         assertThat(itor.next() != null).isTrue();
@@ -155,10 +155,10 @@ public class ProjectControllerTest {
         projectRepository.save(project);
         assertThat(projectRepository.count() == 1).isTrue();
 
-        projectController.delete("tests");
+        projectController.delete("tests", null);
         assertThat(projectRepository.count() == 1).isTrue();
 
-        projectController.delete("test");
+        projectController.delete("test", null);
         assertThat(projectRepository.count() == 0).isTrue();
     }
 

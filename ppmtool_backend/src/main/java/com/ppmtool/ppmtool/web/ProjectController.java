@@ -44,18 +44,18 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<?> getById(@PathVariable String projectId) {
-        return new ResponseEntity<>(projectService.getById(projectId), HttpStatus.OK);
+    public ResponseEntity<?> getById(@PathVariable String projectId, Principal principal) {
+        return new ResponseEntity<>(projectService.getById(projectId, principal != null ? principal.getName() : ""), HttpStatus.OK);
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(projectService.getAll(), HttpStatus.OK);
+    public ResponseEntity<?> getAll(Principal principal) {
+        return new ResponseEntity<>(projectService.getAll(principal != null ? principal.getName() : ""), HttpStatus.OK);
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Void> delete(@PathVariable String projectId) {
-        projectService.delete(projectId);
+    public ResponseEntity<Void> delete(@PathVariable String projectId, Principal principal) {
+        projectService.delete(projectId, principal != null ? principal.getName() : "");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
