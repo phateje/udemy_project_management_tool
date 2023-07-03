@@ -37,6 +37,7 @@ public class UserController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @CrossOrigin("http://localhost:3000")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
         // might be better to have this in the service, but it's more convenient to have it here cause of the binding result?

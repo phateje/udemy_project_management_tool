@@ -123,6 +123,17 @@ const login = (email, password) => {
   };
 };
 
+const register = (email, password, confirmPassword) => {
+  return async () => {
+    const res = await axios.post(`http://localhost:8080/api/users/register`, {
+      username: email,
+      password,
+      confirmPassword,
+    });
+    return res.data;
+  };
+};
+
 export {
   createProject,
   getAllProjects,
@@ -133,4 +144,5 @@ export {
   upsertTask,
   deleteTask,
   login,
+  register,
 };
