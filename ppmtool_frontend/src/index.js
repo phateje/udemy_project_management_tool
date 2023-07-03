@@ -16,6 +16,7 @@ import UpdateProject, {
 import ProjectBoard, {
   loader as tasksLoader,
 } from "./components/ProjectBoard/ProjectBoard";
+import Login from "./components/Login";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
       {
         path: "/",
         element: <Dashboard />,

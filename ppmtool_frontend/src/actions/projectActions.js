@@ -113,6 +113,16 @@ const deleteTask = (id) => {
   };
 };
 
+const login = (email, password) => {
+  return async () => {
+    const res = await axios.post(`http://localhost:8080/api/users/login`, {
+      username: email,
+      password,
+    });
+    return res.data;
+  };
+};
+
 export {
   createProject,
   getAllProjects,
@@ -122,4 +132,5 @@ export {
   getTask,
   upsertTask,
   deleteTask,
+  login,
 };
